@@ -11,7 +11,6 @@ dependencies = [
     "databricks-sdk==0.59.0",
     "pydantic>=2.5.0",
     "python-multipart>=0.0.6",
-    "python-dotenv>=1.0.0",
     "httpx>=0.25.0",
     "pandas>=2.1.0",
     "requests>=2.32.4",
@@ -20,11 +19,7 @@ dependencies = [
     "databricks-connect>=16.1.6", # Latest version compatible with Python 3.11
     "mlflow[databricks]>=3.1.1",
     "debugpy>=1.8.15",
-    "fastapi-mcp>=0.3.7",
-    "fastmcp",
-    "mcp>=1.12.0",
-    "pyyaml>=6.0.2",
-    "websockets>=15.0.1",
+    "python-dotenv>=1.1.1",
 ]
 requires-python = ">=3.11"
 
@@ -38,16 +33,12 @@ dev = [
     "httpx>=0.25.0",
 ]
 
-[project.scripts]
-hello-world = "claude_scripts.hello_world:main"
-dba-mcp-proxy = "dba_mcp_proxy.mcp_client:main"
-
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["server", "claude_scripts", "scripts", "dba_mcp_proxy"]
+packages = ["server", "scripts"]
 
 [tool.ruff]
 line-length = 100
@@ -126,4 +117,5 @@ convention = "google"
 [dependency-groups]
 dev = [
     "tomli>=2.2.1",
+    "websockets>=15.0.1",
 ]

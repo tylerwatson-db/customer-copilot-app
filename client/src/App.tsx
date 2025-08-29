@@ -1,10 +1,23 @@
-import { PromptsPage } from "./pages/PromptsPage";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { QueryInterface } from "./components/QueryInterface";
+
+// Create a client
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 3,
+      staleTime: 5 * 60 * 1000, // 5 minutes
+    },
+  },
+})
 
 function App() {
   return (
-    <div className="min-h-screen bg-background">
-      <PromptsPage />
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <div className="min-h-screen bg-background">
+        <QueryInterface />
+      </div>
+    </QueryClientProvider>
   );
 }
 

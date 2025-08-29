@@ -1,17 +1,14 @@
 """FastAPI application for Databricks App Template."""
 
 import os
+from contextlib import asynccontextmanager
 from pathlib import Path
 
-import yaml
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastmcp import FastMCP
 
-from server.prompts import load_prompts
 from server.routers import router
-from server.tools import load_tools
 
 
 # Load environment variables from .env.local if it exists
@@ -32,46 +29,22 @@ load_env_file('.env')
 load_env_file('.env.local')
 
 
-# Load configuration from config.yaml
-def load_config() -> dict:
-  """Load configuration from config.yaml."""
-  config_path = Path('config.yaml')
-  if config_path.exists():
-    with open(config_path, 'r') as f:
-      return yaml.safe_load(f)
-  return {}
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+  """Manage application lifespan."""
+  yield
 
 
-config = load_config()
-servername = config.get('servername', 'databricks-mcp')
-
-# Create MCP server
-mcp_server = FastMCP(name=servername)
-
-# Load prompts and tools
-load_prompts(mcp_server)
-load_tools(mcp_server)
-
-# Create ASGI app from MCP server
-# Note: Setting path='/' here to avoid /mcp/mcp double path
-mcp_asgi_app = mcp_server.http_app(path='/')
-
-# Pass the MCP app's lifespan to FastAPI
 app = FastAPI(
   title='Databricks App API',
   description='Modern FastAPI application template for Databricks Apps with React frontend',
   version='0.1.0',
-  lifespan=mcp_asgi_app.lifespan,
+  lifespan=lifespan,
 )
 
 app.add_middleware(
   CORSMiddleware,
-  allow_origins=[
-    'http://localhost:3000',
-    'http://127.0.0.1:3000',
-    'http://localhost:5173',
-    'http://127.0.0.1:5173',
-  ],
+  allow_origins=['http://localhost:3000', 'http://127.0.0.1:3000'],
   allow_credentials=True,
   allow_methods=['*'],
   allow_headers=['*'],
@@ -79,8 +52,12 @@ app.add_middleware(
 
 app.include_router(router, prefix='/api', tags=['api'])
 
-# Mount the MCP server
-app.mount('/mcp', mcp_asgi_app)
+
+@app.get('/health')
+async def health():
+  """Health check endpoint."""
+  return {'status': 'healthy'}
+
 
 # ============================================================================
 # SERVE STATIC FILES FROM CLIENT BUILD DIRECTORY (MUST BE LAST!)
@@ -90,9 +67,3 @@ app.mount('/mcp', mcp_asgi_app)
 # Any routes added after this will be unreachable!
 if os.path.exists('client/build'):
   app.mount('/', StaticFiles(directory='client/build', html=True), name='static')
-
-if __name__ == '__main__':
-  import uvicorn
-
-  port = int(os.environ.get('DATABRICKS_APP_PORT', 8000))
-  uvicorn.run(app, host='0.0.0.0', port=port)

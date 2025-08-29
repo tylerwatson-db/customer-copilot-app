@@ -4,36 +4,10 @@
 /* eslint-disable */
 import type { QueryRequest } from '../models/QueryRequest';
 import type { QueryResponse } from '../models/QueryResponse';
-import type { UserInfo } from '../models/UserInfo';
-import type { UserWorkspaceInfo } from '../models/UserWorkspaceInfo';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
-export class ApiService {
-    /**
-     * Get Current User
-     * Get current user information from Databricks.
-     * @returns UserInfo Successful Response
-     * @throws ApiError
-     */
-    public static getCurrentUserApiUserMeGet(): CancelablePromise<UserInfo> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/user/me',
-        });
-    }
-    /**
-     * Get User Workspace Info
-     * Get user information along with workspace details.
-     * @returns UserWorkspaceInfo Successful Response
-     * @throws ApiError
-     */
-    public static getUserWorkspaceInfoApiUserMeWorkspaceGet(): CancelablePromise<UserWorkspaceInfo> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/user/me/workspace',
-        });
-    }
+export class QueryService {
     /**
      * Query Customer Copilot
      * Query the customer copilot model serving endpoint using Databricks SDK.

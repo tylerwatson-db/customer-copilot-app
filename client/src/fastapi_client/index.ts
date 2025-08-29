@@ -8,11 +8,14 @@ export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
 export type { HTTPValidationError } from './models/HTTPValidationError';
+export type { QueryMetadata } from './models/QueryMetadata';
+export type { QueryRequest } from './models/QueryRequest';
+export type { QueryResponse } from './models/QueryResponse';
 export type { UserInfo } from './models/UserInfo';
 export type { UserWorkspaceInfo } from './models/UserWorkspaceInfo';
 export type { ValidationError } from './models/ValidationError';
 
 export { ApiService } from './services/ApiService';
-export { McpService } from './services/McpService';
-export { PromptsService } from './services/PromptsService';
+export { DefaultService } from './services/DefaultService';
+export { QueryService } from './services/QueryService';
 export { UserService } from './services/UserService';

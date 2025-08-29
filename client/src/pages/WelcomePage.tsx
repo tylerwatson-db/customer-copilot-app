@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { McpService } from "@/fastapi_client";
 import {
   Code,
   ExternalLink,
@@ -18,7 +17,6 @@ import {
   User,
   Sparkles,
   Bot,
-  Terminal,
 } from "lucide-react";
 
 interface UserInfo {
@@ -40,12 +38,6 @@ export function WelcomePage() {
   const { data: userInfo } = useQuery({
     queryKey: ["userInfo"],
     queryFn: fetchUserInfo,
-    retry: false,
-  });
-
-  const { data: mcpInfo } = useQuery({
-    queryKey: ["mcpInfo"],
-    queryFn: () => McpService.getMcpInfoApiMcpInfoInfoGet(),
     retry: false,
   });
 
@@ -260,58 +252,6 @@ export function WelcomePage() {
             </CardContent>
           </Card>
         </div>
-
-        {/* MCP Configuration */}
-        {mcpInfo && (
-          <Card className="mb-8 border-purple-200 bg-purple-50/50 dark:border-purple-800 dark:bg-purple-950/50">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Terminal className="h-5 w-5" />
-                MCP (Model Context Protocol) Server
-              </CardTitle>
-              <CardDescription>
-                This app includes an MCP server that exposes prompts and tools to Claude Code
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <h4 className="font-semibold mb-2">MCP Server URL</h4>
-                <code className="bg-muted px-3 py-2 rounded block text-sm font-mono">
-                  {mcpInfo.mcp_url}
-                </code>
-              </div>
-              
-              <div>
-                <h4 className="font-semibold mb-2">Claude Code Configuration</h4>
-                <p className="text-sm text-muted-foreground mb-2">
-                  To use this MCP server with Claude Code, run:
-                </p>
-                <code className="bg-muted px-3 py-2 rounded block text-sm font-mono">
-                  claude mcp add {mcpInfo.server_name || 'mcp-commands'} {mcpInfo.client_path || 'python mcp_databricks_client.py'}
-                </code>
-              </div>
-
-              <div className="flex items-center gap-4">
-                <Badge variant="outline">
-                  Transport: {mcpInfo.transport}
-                </Badge>
-                {mcpInfo.capabilities?.prompts && (
-                  <Badge variant="outline">Prompts ✓</Badge>
-                )}
-                {mcpInfo.capabilities?.tools && (
-                  <Badge variant="outline">Tools ✓</Badge>
-                )}
-              </div>
-
-              <Button asChild className="w-full">
-                <a href="/prompts">
-                  <ExternalLink className="h-4 w-4 mr-2" />
-                  View Available Prompts & Tools
-                </a>
-              </Button>
-            </CardContent>
-          </Card>
-        )}
 
         {/* Second Row */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">

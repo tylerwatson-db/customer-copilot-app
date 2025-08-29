@@ -44,3 +44,28 @@ class UserService:
         'deployment_name': workspace_url.split('//')[1].split('.')[0] if workspace_url else None,
       },
     }
+
+  def get_token(self) -> str:
+    """Get the authentication token for API requests."""
+    # For model serving endpoints, we need to use the OAuth token
+    # The Databricks SDK handles token management and refresh automatically
+    try:
+      # Use the SDK's authentication mechanism to get a valid OAuth token
+      auth_header = self.client.config.authenticate()
+      if auth_header and isinstance(auth_header, dict) and 'Authorization' in auth_header:
+        # Extract token from Authorization header
+        auth_value = auth_header['Authorization']
+        if auth_value.startswith('Bearer '):
+          return auth_value[7:]  # Remove 'Bearer ' prefix
+      
+      # Fallback to direct token access for PAT authentication
+      if hasattr(self.client.config, 'token') and self.client.config.token:
+        return self.client.config.token
+      
+      # Last resort: try to get OAuth token directly
+      return self.client.config.authenticate()
+    except Exception as e:
+      # If all else fails, try the raw token
+      if hasattr(self.client.config, 'token') and self.client.config.token:
+        return self.client.config.token
+      raise Exception(f"Failed to get authentication token: {str(e)}")
