@@ -15,8 +15,8 @@ from server.services.user_service import UserService
 router = APIRouter()
 
 # Model serving endpoint name (not the full URL)
-MODEL_ENDPOINT_NAME = "agents_team_nasty_hackathon_ws-customer_copilot-agent_for_testi"
-MODEL_ENDPOINT_URL = "https://fe-vm-team-nasty-hackathon-ws.cloud.databricks.com/serving-endpoints/agents_team_nasty_hackathon_ws-customer_copilot-agent_for_testi/invocations"
+MODEL_ENDPOINT_NAME = "agents_team_nasty-customer_copilot-agent_no_mcp"
+MODEL_ENDPOINT_URL = "https://fe-vm-team-nasty-hackathon-ws.cloud.databricks.com/serving-endpoints/agents_team_nasty-customer_copilot-agent_no_mcp/invocations"
 
 
 def extract_tools_used(response_text: str) -> List[str]:
@@ -98,7 +98,7 @@ async def query_customer_copilot(request: QueryRequest):
         
         # Prepare payload for model serving endpoint
         payload = {
-            "messages": [{"role": "user", "content": request.query}]
+            "input": [{"role": "user", "content": request.query}]
         }
         
         # Use the SDK's serving endpoints client for OAuth authentication
