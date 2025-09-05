@@ -15,8 +15,8 @@ from server.services.user_service import UserService
 router = APIRouter()
 
 # Model serving endpoint name (not the full URL)
-MODEL_ENDPOINT_NAME = "agents_team_nasty-customer_copilot-agent_no_mcp"
-MODEL_ENDPOINT_URL = "https://fe-vm-team-nasty-hackathon-ws.cloud.databricks.com/serving-endpoints/agents_team_nasty-customer_copilot-agent_no_mcp/invocations"
+MODEL_ENDPOINT_NAME = "agents_team_nasty-customer_copilot-agent_all_mcp"
+MODEL_ENDPOINT_URL = "https://fe-vm-team-nasty-hackathon-ws.cloud.databricks.com/serving-endpoints/agents_team_nasty-customer_copilot-agent_all_mcp/invocations"
 
 
 def extract_tools_used(response_text: str) -> List[str]:
