@@ -128,7 +128,7 @@ async def query_customer_copilot(request: QueryRequest):
         }
         
         # Make request to model serving endpoint
-        async with httpx.AsyncClient(timeout=30.0) as http_client:
+        async with httpx.AsyncClient(timeout=60.0) as http_client:
             response = await http_client.post(
                 MODEL_ENDPOINT_URL,
                 json=payload,
@@ -221,7 +221,7 @@ async def query_customer_copilot(request: QueryRequest):
         
     except httpx.TimeoutException:
         response_time = time.time() - start_time
-        error_msg = "Request timed out after 30 seconds"
+        error_msg = "Request timed out after 60 seconds"
         
         return QueryResponse(
             response="",
