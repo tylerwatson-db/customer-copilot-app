@@ -143,17 +143,38 @@ async def query_customer_copilot(request: QueryRequest):
             
             # Extract response content (format varies by model)
             ai_response = ""
-            if "messages" in response_data and len(response_data["messages"]) > 0:
-                # Format for this specific model endpoint - get the final assistant message
+            if "output" in response_data and len(response_data["output"]) > 0:
+                # New format with 'output' array - find the final assistant message
+                output_items = response_data["output"]
+                # Find the last message with type 'message' and role 'assistant'
+                assistant_messages = [
+                    item for item in output_items 
+                    if item.get("type") == "message" and item.get("role") == "assistant"
+                ]
+                if assistant_messages:
+                    # Get the last assistant message
+                    final_message = assistant_messages[-1]
+                    if "content" in final_message and len(final_message["content"]) > 0:
+                        # Extract text from content array
+                        content_items = final_message["content"]
+                        text_parts = []
+                        for content_item in content_items:
+                            if content_item.get("type") == "output_text" and "text" in content_item:
+                                text_parts.append(content_item["text"])
+                        ai_response = "\n".join(text_parts) if text_parts else str(final_message)
+                    else:
+                        ai_response = str(final_message)
+                else:
+                    # Fallback to the last output item
+                    ai_response = str(output_items[-1])
+            elif "messages" in response_data and len(response_data["messages"]) > 0:
+                # Legacy format with 'messages' array
                 messages = response_data["messages"]
-                # Find the last assistant message which contains the final detailed response
                 assistant_messages = [msg for msg in messages if msg.get("role") == "assistant"]
                 if assistant_messages:
-                    # Get the last assistant message (contains the full detailed response)
                     final_message = assistant_messages[-1]
                     ai_response = final_message.get("content", str(final_message))
                 else:
-                    # Fallback to the last message if no assistant role found
                     final_message = messages[-1]
                     ai_response = final_message.get("content", str(final_message))
             elif "choices" in response_data and len(response_data["choices"]) > 0:
