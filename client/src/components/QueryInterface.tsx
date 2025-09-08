@@ -255,6 +255,7 @@ export function QueryInterface() {
           ))}
         </div>
       )}
+      </div>
     </div>
   )
 }
