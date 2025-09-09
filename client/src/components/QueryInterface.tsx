@@ -77,8 +77,19 @@ export function QueryInterface() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <div className="container mx-auto max-w-5xl p-6 space-y-8">
+    <div 
+      className="min-h-screen bg-gradient-to-br from-blue-50/80 via-white/90 to-purple-50/80 relative"
+      style={{
+        backgroundImage: `url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed'
+      }}
+    >
+      {/* Overlay for better text readability */}
+      <div className="absolute inset-0 bg-white/20 backdrop-blur-[1px]"></div>
+      
+      <div className="container mx-auto max-w-5xl p-6 space-y-8 relative z-10">
         {/* Header Section */}
         <div className="text-center space-y-4 py-8">
           <div className="space-y-2">
@@ -91,7 +102,7 @@ export function QueryInterface() {
           </div>
           
           <div className="max-w-4xl mx-auto">
-            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+            <Card className="border-0 shadow-xl bg-white/90 backdrop-blur-md">
               <CardContent className="p-6">
                 <div className="grid md:grid-cols-3 gap-6 text-center">
                   <div className="space-y-2">
@@ -130,7 +141,7 @@ export function QueryInterface() {
         </div>
 
         {/* Query Interface */}
-        <Card className="border-0 shadow-xl bg-white/90 backdrop-blur-sm">
+        <Card className="border-0 shadow-xl bg-white/95 backdrop-blur-md">
           <CardHeader className="pb-4">
             <CardTitle className="text-2xl font-bold text-gray-900 flex items-center gap-2">
               <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -190,7 +201,7 @@ export function QueryInterface() {
           </div>
           
           {results.map((result, index) => (
-            <Card key={result.id} className="border-0 shadow-lg bg-white/90 backdrop-blur-sm hover:shadow-xl transition-shadow">
+            <Card key={result.id} className="border-0 shadow-xl bg-white/95 backdrop-blur-md hover:shadow-2xl transition-shadow">
               <CardHeader className="pb-4">
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
